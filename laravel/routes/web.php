@@ -14,3 +14,13 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index');
+
+Route::group(['prefix' => 'chat', 'as' => 'chat.' ,'middleware' => 'auth'], function(){
+	Route::get('rooms','RoomsController@index')->name('rooms.list');
+	Route::get('rooms/{id}','RoomsController@show')->name('rooms.show');
+});
+
