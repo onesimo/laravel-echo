@@ -13,8 +13,44 @@ require('./bootstrap');
  * the application, or feel free to tweak this setup for your needs.
  */
 
-Vue.component('example', require('./components/Example.vue'));
+//Vue.component('example', require('./components/Example.vue'));
 
+Vue.config.delimiters = ['[[', ']]'];
 const app = new Vue({
-    el: '#app'
+    el: 'body',
+    data: {
+        roomId: roomId,
+        userId: userId,
+        content: '',
+        users: [],
+        messages: []
+    },
+    ready(){
+        Echo.join(`room.${roomId}`)
+            .listen('SendMessage', (e) => {
+                this.messages.push(e);
+            })
+            .here((users) => {
+                this.users = users;
+            })
+            .joining((user) => {
+                this.users.push(user);
+                jQuery.notify(`<strong>${user.name}</strong> entrou no chat.`, {allow_dismiss: true});
+            })
+            .leaving((user) => {
+                this.users.$remove(user);
+            })
+    },
+    methods: {
+        sendMessage(){
+            Vue.http.post(`/chat/rooms/${this.roomId}/message`, {
+                'content': this.content
+            });
+        },
+        createPhoto(email){
+            return `http://www.gravatar.com/avatar/${md5(email)}.jpg`;
+        }
+    }
 });
+
+//console.log(app);

@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+
+use App\Events\SendMessage;
+use App\Message;
 use App\Room;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -28,6 +31,25 @@ class RoomsController extends Controller
 		$user->save();
 
 		return view('rooms.show', compact('room'));
+	}
+
+	public function createMessate(Request $request, $id)
+	{	
+		$room = Room::find($id);
+		if(!$room){
+			throw new ModelNotFoundException("Sala não encontrada");
+			
+		}
+		$message = new Message();
+		$message->content = $request->get('content');
+		$message->room_id = $room->id;
+		$message->user_id = Auth::user()->id;
+		$message->save();
+
+		broadcast(new SendMessage($message));
+		
+		return response()->json($message,201);
+
 	}
 
 }
