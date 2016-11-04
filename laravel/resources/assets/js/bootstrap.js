@@ -9,10 +9,9 @@ window._ = require('lodash');
 
 window.$ = window.jQuery = require('jquery');
 require('bootstrap-sass');
-require('Bootstrap-notify');
+require('bootstrap-notify');
 
 window.md5 = require('blueimp-md5');
-
 /**
  * Vue is a modern JavaScript library for building interactive web interfaces
  * using reactive data binding and reusable components. Vue's API is clean
@@ -29,7 +28,7 @@ require('vue-resource');
  */
 
 Vue.http.interceptors.push((request, next) => {
-    request.headers.set('X-CSRF-TOKEN', Laravel.csrfToken);
+    request.headers['X-CSRF-TOKEN'] = Laravel.csrfToken;
 
     next();
 });
@@ -44,5 +43,5 @@ import Echo from "laravel-echo"
 
 window.Echo = new Echo({
     broadcaster: 'pusher',
-    key: 'b29cea50efda165e751d'
+    key: 'ed26f8700212ca2f3ab0'
 });

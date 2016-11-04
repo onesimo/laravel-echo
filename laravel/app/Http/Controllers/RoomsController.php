@@ -19,19 +19,19 @@ class RoomsController extends Controller
     	return view('rooms.index',compact('rooms'));
     }
 
-    public function show($id)
+	public function show($id)
     {
-		$room = Room::find($id);
-		if(!$room){
-			throw new ModelNotFoundException("Sala não encontrada");
-			
-		}
-		$user = Auth::user();
-		$user->room_id = $room->id;
-		$user->save();
+        $room = Room::find($id);
+        
+        if (!$room) {
+            throw new ModelNotFoundException("Sala não existente");
+        }
 
-		return view('rooms.show', compact('room'));
-	}
+        $user = Auth::user();
+        $user->room_id = $room->id;
+        $user->save();
+        return view('rooms.show', compact('room'));
+    }
 
 	public function createMessate(Request $request, $id)
 	{	
